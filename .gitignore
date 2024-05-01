@@ -277,3 +277,5 @@ ServiceFabricBackup/
 
 # Microsoft Fakes
 ComponentFramework/GameEngineLog.txt
+.vscode/*
+ComponentFramework/.vscode/*
