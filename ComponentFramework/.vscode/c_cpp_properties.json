@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "name": "windows-gcc-x64",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/GameDev/",
+                "C:/GameDev/MathLibrary/include",
+                "C:/GameDev/OpenGL/include",
+                "C:/GameDev/IrrKlang/include",
+                "C:/GameDev/dirent-1.21/include",
+                "C:/GameDev/SDL/include",
+                "C:/GameDev/Vulkan/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.19041.0",
+            "cStandard": "${default}",
+            "cppStandard": "${default}",
+            "intelliSenseMode": "${default}",
+            "compilerPath": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.31.31103/bin/Hostx64/x86/cl.exe"
+        }
+    ],
+    "version": 4
+}
