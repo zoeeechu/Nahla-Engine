@@ -1,6 +1,7 @@
-# Nahla-Engine
+<img src="./readme-src/logo.png" width="400" title="Nahla" width="30">
  My first ever game engine!
 
+---
 
 > Click on the preview below to see the full video
 > 
