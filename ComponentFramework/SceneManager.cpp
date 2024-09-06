@@ -26,6 +26,7 @@
 #include "Scene5G.h"
 #include "Scene6G.h"
 #include "Scene6G2.h"
+#include "MainScene.h"
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -34,6 +35,7 @@ std::stack<Scene *> sceneStack;
 Scene *currentScene = nullptr;
 
 extern Scene *scenes[] = {
+    new MainScene,
     new Scene6G,
     new Scene3p,
     new Scene6G2, 
@@ -110,7 +112,7 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_)
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();                         //(void)io;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;     // Enable Docking
-    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;   // Enable Multi-Viewport / Platform Windows // BREAKS SHIT !!!! - zoe
+   // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;   // Enable Multi-Viewport / Platform Windows // BREAKS SHIT !!!! - zoe
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
 
@@ -178,8 +180,13 @@ void SceneManager::Run()
         currentScene->Update(timer->GetDeltaTime());
         currentScene->Render();
         ImGui::Render();
-        ImGui::UpdatePlatformWindows();
+      //  ImGui::UpdatePlatformWindows();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+         if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault(NULL, (void*)SDL_GL_GetProcAddress);
+        }
         SDL_GL_SwapWindow(window->getWindow());
         SDL_Delay(timer->GetSleepTime(fps));
     }

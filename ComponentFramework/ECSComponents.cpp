@@ -142,9 +142,15 @@ void newMeshComponent::LoadModel(const char* filename) {
     normals.clear();
     uvCoords.clear();
 
-    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filename)) {
-        throw std::runtime_error(warn + err);
-    }
+	try {
+		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filename)) {
+			throw std::runtime_error(warn + err);
+		}
+	}
+	catch (const std::runtime_error& e) {
+		std::cerr << "Failed to load OBJ file: " << e.what() << std::endl;
+	}
+
     for (const auto& shape : shapes) {
         for (const auto& index : shape.mesh.indices) {
             Vec3 vertex{};
@@ -236,6 +242,12 @@ void newMeshComponent::OnDestroy() {
 /// Currently unused.
 
 void newMeshComponent::Update(const float deltaTime) {}
+
+
+void newMeshComponent::setMappedColors(Vec3 colors) {
+	mappedColors = colors;
+	
+}
 
 
 newShaderComponent::newShaderComponent(ECSComponent* parent_, const char* vertFilename_, const char* fragFilename_,

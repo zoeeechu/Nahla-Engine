@@ -19,12 +19,14 @@
 #include "imgui/imgui_impl_sdl.h"
 #include "imgui/imgui_internal.h"
 #include <unordered_map>
+#include <map>
 #include <string>
 #include <memory>
 #include <vector>
 #include <filesystem>
 #include <windows.h>
 #include "filebrowser.h"
+// #include "picker.h"
 
 using namespace std;
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
@@ -39,6 +41,7 @@ static int textureHeight = 720;
 template <typename T>
 using refPtr = std::shared_ptr<T>;
 static unordered_map<refPtr<Entity>, int> entityMap;
+
 
 static Manager manager;
 //  static bool show_app_dockspace = false;
@@ -71,6 +74,7 @@ bool Scene6G::OnCreate()
 {
 
 	CreateFBO();
+
 	GLint maxPatchVerticies;
 	glGetIntegerv(GL_MAX_PATCH_VERTICES, &maxPatchVerticies);
 	printf("maxPatchVerticies: %d\n", maxPatchVerticies);
@@ -142,6 +146,8 @@ bool Scene6G::OnCreate()
 	Sky->OnCreate();
 
 	cam.setVeiw(Quaternion(1.0f, Vec3(0.0f, 0.0f, 0.0f)), Vec3(0.0f, 0.0f, -5.0f));
+
+
 
 	return true;
 }
@@ -241,6 +247,19 @@ void Scene6G::HandleEvents(const SDL_Event &sdlEvent)
 		break;
 
 	case SDL_MOUSEBUTTONDOWN:
+		if (sdlEvent.button.button == SDL_BUTTON_LEFT)
+		{
+			int mouseX = sdlEvent.button.x;
+			int mouseY = sdlEvent.button.y;
+
+			// int pickedID = picker.GetPickedObjectID(mouseX, mouseY, textureHeight);
+			// int pickedID = GetPickedObjectID(mouseX, mouseY);
+			// if (pickedID >= 0 && pickedID < manager.getEntities().size())
+			//{
+			//	auto pickedEntity = manager.getEntities()[pickedID];
+			//	std::cout << "Clicked on entity: " << pickedEntity->getName() << std::endl;
+			//}
+		}
 		break;
 
 	case SDL_MOUSEBUTTONUP:
@@ -366,24 +385,24 @@ void Scene6G::HandleTheGUI()
 
 	ImGui::Begin("Image Render Test");
 
-
 	Texture2DComponent &textureComponent = texture2D.getComponent<Texture2DComponent>();
 	int imageWidth = textureComponent.getImageWidth();
 	int imageHeight = textureComponent.getImageHeight();
 	GLuint my_image_texture = textureComponent.getTexture();
-
 
 	float aspectRatio = static_cast<float>(imageWidth) / static_cast<float>(imageHeight);
 
 	ImVec2 windowSize = ImGui::GetWindowSize();
 
 	ImVec2 scaledTexture;
-	if (windowSize.y * aspectRatio <= windowSize.x){
+	if (windowSize.y * aspectRatio <= windowSize.x)
+	{
 
 		scaledTexture.y = windowSize.y;
 		scaledTexture.x = windowSize.y * aspectRatio;
 	}
-	else{
+	else
+	{
 
 		scaledTexture.x = windowSize.x;
 		scaledTexture.y = windowSize.x / aspectRatio;
@@ -403,6 +422,30 @@ void Scene6G::HandleTheGUI()
 
 void Scene6G::Render() const
 {
+
+
+	// object picker test -zoe
+    //GLint depth;
+  	//glGetIntegerv (GL_MODELVIEW_STACK_DEPTH, &depth);
+    //int capacity = manager.getEntities().size() * 4 * depth;
+	//glBindBuffer(GL_UNIFORM_BUFFER, capacity);
+	//glSelectBuffer(capacity, nullptr);
+    //glRenderMode(GL_SELECT);
+//
+//
+	//glMatrixMode(GL_PROJECTION);
+    //glLoadIdentity();
+   //
+    ////Restrict region to pick object only in this region
+    //gluPickMatrix();    //x, y, width, height is the picking area
+//
+    ////Load the projection matrix
+    //glMultMatrixf(projection, 0);
+	/////////
+	
+
+
+
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	glViewport(0, 0, textureWidth, textureHeight);
 
@@ -549,3 +592,33 @@ void Scene6G::CreateFBO()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+void Scene6G::DepthBufferFBO()
+{
+	GLuint fbo, idTexture;
+	glGenFramebuffers(1, &fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	// Create a texture for storing object IDs
+	glGenTextures(1, &idTexture);
+	glBindTexture(GL_TEXTURE_2D, idTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, textureWidth, textureHeight, 0, GL_RED_INTEGER, GL_INT, nullptr);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, idTexture, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+
+void Scene6G::renderObjectWithID(Entity *object) {
+    GLuint id = object->getID();
+	glUniform1i(object->getComponent<newShaderComponent>().GetUniformID("objectID"), id);
+
+
+    // Render the object here (e.g., using object->render())
+}
+
+
+

@@ -169,6 +169,7 @@
     <ClCompile Include="Scene6G2.cpp" />
     <ClCompile Include="Scene3p.cpp" />
     <ClCompile Include="filebrowser.cpp" />
+    <ClCompile Include="MainScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
@@ -218,6 +219,7 @@
     <ClInclude Include="Scene6G2.h" />
     <ClInclude Include="Scene3p.h" />
     <ClInclude Include="filebrowser.h" />
+    <ClInclude Include="MainScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="GameEngineLog.txt" />

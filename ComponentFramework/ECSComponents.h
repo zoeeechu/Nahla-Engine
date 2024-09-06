@@ -127,6 +127,8 @@ private:
 	size_t dataLength;
 	GLenum drawmode;
 
+	Vec3 mappedColors = Vec3(0.0f, 0.0f, 0.0f);
+
 	/// Private helper methods
 	void LoadModel(const char *filename);
 	void StoreMeshData(GLenum drawmode_);
@@ -140,6 +142,7 @@ public:
 	void Update(const float deltaTime);
 	void Render() const;
 	void Render(GLenum drawmode) const;
+	void setMappedColors(Vec3 colors);
 };
 
 class newShaderComponent : public ECSComponent

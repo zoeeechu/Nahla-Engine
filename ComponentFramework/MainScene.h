@@ -1,15 +1,37 @@
-#ifndef Scene6G_H
-#define Scene6G_H
+#ifndef MainScene_H
+#define MainScene_H
+
+
 #include "Scene.h"
 #include "Vector.h"
 #include "Trackball.h"
-
 #include "Camera.h"
-#include <Matrix.h>
-#include <vector>
+#include "Debug.h"
+#include "Body.h"
+#include "skybox.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_sdl.h"
+#include "imgui/imgui_internal.h"
+
 
 #include "ECS.h"
 #include "ECSComponents.h"
+
+
+#include <Matrix.h>
+#include <vector>
+#include <glew.h>
+#include <iostream>
+#include <SDL.h>
+#include <MMath.h>
+#include <QMath.h>
+#include <Vector>
+#include <unordered_map>
+#include <map>
+#include <string>
+#include <memory>
+#include <vector>
 
 using namespace MATH;
 
@@ -20,28 +42,34 @@ class Texture;
 
 class skybox;
 
-class Scene6G : public Scene
+class MainScene : public Scene
 {
 private:
 	Body *skullBody;
 	Body *eyeBody;
+    Body *cubeBody;
 
 	GLuint framebuffer;
 	GLuint texture;
 	GLuint rboId;
 	Texture *Skulltexture;
 	Texture *Eyetexture;
+    Texture *cubeTexture;
 	Matrix4 projectionMatrix;
 	Matrix4 viewMatrix;
 	Matrix4 skullMatrix;
+    Matrix4 cubeMatrix;
 	Matrix4 planeMatrix;
 	Matrix4 lEyeMatrix, rEyeMatrix;
 	Matrix4 RCMatrix;
+
+    Vec3 translationOffset = Vec3(0.0f, 0.0f, 0.0f);
 
 
 
 	bool drawInWireMode;
 	bool IsPaused = false;
+    bool IsHoldingShift = false; 
 	mutable bool isGameWindowFocused = false;
 	// mutable bool isGameWindowHovered = false;
 	mutable bool isTitleBarHovered = false;
@@ -50,7 +78,7 @@ private:
 	skybox *Sky;
 
 	float dt;
-	float tesLvl = 3.6f;
+	float tesLvl = 0.1f;
 
 	float fogDensity = 0.2f;
 	float fogGradient = 1.2f;
@@ -84,8 +112,8 @@ private:
 	};
 
 public:
-	explicit Scene6G();
-	virtual ~Scene6G();
+	explicit MainScene();
+	virtual ~MainScene();
 
 	virtual bool OnCreate() override;
 	virtual void OnDestroy() override;

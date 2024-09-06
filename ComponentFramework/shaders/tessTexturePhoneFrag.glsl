@@ -11,7 +11,7 @@ layout(binding=2) uniform sampler2D textureData;
 layout(binding = 1) uniform sampler2D normalMap;
 
 void main() {
-    vec4 fogColor = vec4(0.8, 0.5, 0.2, 0.0);
+    vec4 fogColor = vec4(1.0, 1.0, 1.0, 1.0);
     vec4 ks = vec4(0.3, 0.3, 0.3, 0.0);
     vec4 kd = vec4(0.6, 0.6, 0.3, 0.0);
     vec4 ka = 0.1 * kd;
